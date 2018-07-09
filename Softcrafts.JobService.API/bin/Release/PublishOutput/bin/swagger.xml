@@ -1,0 +1,819 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Softcrafts.JobService.API</name>
+    </assembly>
+    <members>
+        <member name="T:Softcrafts.jobservice.API.Controllers.AdminController">
+            <summary>
+            API Admin Routes
+            </summary>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.AdminController.#ctor">
+            <summary>
+            AdminController
+            </summary>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.AdminController.Heartbeat(System.Boolean)">
+            <summary>
+            Prüft die API auf Funktionstüchtigkeit
+            </summary>
+            <remarks>
+            ### REMARKS ###
+            - Eine Authentifizierung ist nicht erforderlich
+            - inklusiveDatabaseCheck true|false
+            #### C# Examples ####
+            <!-- 
+            <code>
+                   using System.Net;
+                   using FluentAssertions;
+                   using NUnit.Framework;
+                   using RestSharp;
+                   using RestSharp.Authenticators;
+                   [Test]
+                   public void HeartbeatWithDatabaseTest()
+                   {
+                       var client = new RestClient("https://test.api.corpinter.net/mbd_semas_jobservice_api_2");
+                       client.Authenticator = new HttpBasicAuthenticator("test", "test");
+                       var request = new RestRequest("/Admin/Heartbeat", Method.POST);
+                       request.AddQueryParameter("inklusiveDatabaseCheck", "true");
+                       request.RequestFormat = DataFormat.Json;
+                       IRestResponse response = client.Execute(request);
+                       response.StatusCode.Should().Be(HttpStatusCode.OK);
+                   }
+                   [Test]
+                   public void HeartbeatWithoutDatabaseTest()
+                   {
+                       var client = new RestClient("https://test.api.corpinter.net/mbd_semas_jobservice_api_2");
+                       client.Authenticator = new HttpBasicAuthenticator("test", "test");
+                       var request = new RestRequest("/Admin/Heartbeat", Method.POST);
+                       request.AddQueryParameter("inklusiveDatabaseCheck", "false");
+                       request.RequestFormat = DataFormat.Json;
+                       IRestResponse response = client.Execute(request);
+                       response.StatusCode.Should().Be(HttpStatusCode.OK);
+                   }
+            </code>
+            -->
+            </remarks>
+            <param name="inklusiveDatabaseCheck">true|false</param>
+            <returns></returns>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.AdminController.GetAllApiUsers(System.Int32,System.Int32)">
+            <summary>
+            Ermittelt alle API-User
+            </summary>
+            <remarks>
+            ### REMARKS ###
+            - Die Authentifizierung über Basic Auth ist erforderlich
+            - Erfordert die Admin-Rolle
+            #### C# Examples ####
+            <!-- 
+            <code>
+                  using System.Net;
+                  using FluentAssertions;
+                  using NUnit.Framework;
+                  using RestSharp;
+                  using RestSharp.Authenticators;
+                  [Test]
+                  public void GetAllApiUsersTest()
+                  {
+                      var client = new RestClient("https://test.api.corpinter.net/mbd_semas_jobservice_api_2");
+                      client.Authenticator = new HttpBasicAuthenticator("test", "test");
+                      var request = new RestRequest("/Admin/GetAllApiUsers", Method.GET);
+                      request.RequestFormat = DataFormat.Json;
+                      IRestResponse response = client.Execute(request);
+                      response.StatusCode.Should().Be(HttpStatusCode.OK);
+                  }
+            </code>
+            -->
+            </remarks>
+            <param name="pageNo">default = 1</param>
+            <param name="pageSize">default = 10</param>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.AdminController.GetAllAdminApiUsers(System.Int32,System.Int32)">
+            <summary>
+            Ermittelt alle APIUser in der Rolle Admin
+            </summary>
+            <remarks>
+            ### REMARKS ###
+            - Die Authentifizierung über Basic Auth ist erforderlich
+            - Erfordert die Admin-Rolle
+            #### C# Examples ####
+            <!-- 
+            <code>
+                  using System.Net;
+                  using FluentAssertions;
+                  using NUnit.Framework;
+                  using RestSharp;
+                  using RestSharp.Authenticators;
+                   [Test]
+                   public void GetAllAdminApiUsersTest()
+                   {
+                       var client = new RestClient("https://test.api.corpinter.net/mbd_semas_jobservice_api_2");
+                       client.Authenticator = new HttpBasicAuthenticator("test", "test");
+                       var request = new RestRequest("/Admin/GetAllAdminApiUsers", Method.GET);
+                       request.RequestFormat = DataFormat.Json;
+                       IRestResponse response = client.Execute(request);
+                       response.StatusCode.Should().Be(HttpStatusCode.OK);
+                   }
+            </code>
+            -->
+            </remarks>
+            <param name="pageNo"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.AdminController.GetAllApiUsersHelper(System.Func{Softcrafts.Jobs.Entities.APIUser,System.Boolean},System.Int32,System.Int32)">
+            <summary>
+             Ermittelt alle API-User
+            </summary>
+            <param name="predicate"></param>
+            <param name="pageNo"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.AdminController.NewApiUser(System.String,System.String,System.Boolean)">
+            <summary>
+            Erstellt einen neuen API User  
+            </summary>
+            <remarks>
+            ### REMARKS ###
+            - Der API User wird zur Verwendung von geschützen API Operationen benötigt.
+            - Der aktuelle APIUSer muss über die Berechtigung verfügen einen neuen API USer zu erstellen
+            - NewApiUser gibt ein Ergebnis vom Typ JobResult zurück.
+            #### Repsonse-Example ####
+            <!-- 
+            <code>
+                {
+                     "semasResult": {
+                     "data": null,
+                     "success": true,
+                     "message": "",
+                     "errorcode": ""
+                     },
+                     "_links": {
+                     "_actions": [{
+                         "type": "POST",
+                         "rel": "DeleteApiUser",
+                         "href": "https://url:port/Admin/DeleteApiUser?username=username"
+                     },
+                     {
+                         "type": "POST",
+                         "rel": "RevokeAdminFromApiUser",
+                         "href": "https://url:port/Admin/RevokeAdminFromApiUser?username=username"
+                     }],
+                     "_infos": {}
+                     },
+                     "_paging": null
+                }
+            </code>
+            -->
+            </remarks>
+            <response code="200">OK</response>
+            <param name="username">username</param>
+            <param name="passwort">password</param>
+            <param name="asAdmin">default = false</param>
+            <returns></returns>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.AdminController.DeleteApiUser(System.String)">
+            <summary>
+            Löscht einen APIUser
+            </summary>
+            <remarks>
+            Erfordert die Admin-Rolle
+            </remarks>
+            <param name="username"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.AdminController.SetApiUserAsAdmin(System.String)">
+            <summary>
+            Berechtigt einen APIUser als Administrator
+            </summary>
+            <remarks>
+            Erfordert die Admin-Rolle
+            </remarks>
+            <param name="username"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.AdminController.RevokeAdminFromApiUser(System.String)">
+            <summary>
+            Entzieht das Admin-Recht von einem APIUser
+            </summary>
+            <remarks>
+            Erfordert die Admin-Rolle
+            </remarks>
+            <param name="username"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Softcrafts.jobservice.API.Controllers.Names">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.Names.#ctor">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:Softcrafts.jobservice.API.Controllers.JobBaseController">
+            <inheritdoc />
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.JobBaseController.CreateActionLink``1(System.String,System.Linq.Expressions.Expression{System.Action{``0}},System.String)">
+            <summary>
+            
+            </summary>
+            <param name="rel"></param>
+            <param name="expression"></param>
+            <param name="method"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:Softcrafts.jobservice.API.Controllers.JobController">
+            <summary>
+            CRUD SEMAS Job API
+            </summary>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.JobController.#ctor">
+            <summary>
+            CRUD JobController
+            </summary>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.JobController.ErmittleAlleJobs(System.Int32,System.Int32)">
+            <summary>
+            Ermittelt alle Jobs
+            </summary>
+            <remarks>
+            ### REMARKS ###
+            - Die Authentifizierung über Basic Auth ist erforderlich
+            #### C# Examples ####
+            <!-- 
+            <code>
+                  using System.Net;
+                  using FluentAssertions;
+                  using NUnit.Framework;
+                  using RestSharp;
+                  using RestSharp.Authenticators;
+                  [Test]
+                  public void ErmittelAlleJobsTest()
+                  {
+                      var client = new RestClient("https://test.api.corpinter.net/mbd_semas_jobservice_api_2");
+                      client.Authenticator = new HttpBasicAuthenticator("test", "test");
+                      var request = new RestRequest("/Jobs/ErmittleAlleJobs", Method.GET);
+                      request.RequestFormat = DataFormat.Json;
+                      IRestResponse response = client.Execute(request);
+                      response.StatusCode.Should().Be(HttpStatusCode.OK);
+                   }
+            </code>
+            -->
+            </remarks>
+            <param name="pageNo">default = 1</param>
+            <param name="pageSize">default = 10</param>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.JobController.CountAlle">
+            <summary>
+            Ermittelt die Anzahl aller Jobs
+            </summary>
+            <remarks>
+            ### REMARKS ###
+            - Die Authentifizierung über Basic Auth ist erforderlich
+            #### C# Examples ####
+            <!-- 
+            <code>
+                  using System.Net;
+                  using FluentAssertions;
+                  using NUnit.Framework;
+                  using RestSharp;
+                  using RestSharp.Authenticators;
+                   [Test]
+                   public void CountAlleTest()
+                   {
+                       var client = new RestClient("https://test.api.corpinter.net/mbd_semas_jobservice_api_2");
+                       client.Authenticator = new HttpBasicAuthenticator("test", "test");
+                       var request = new RestRequest("/Jobs/CountAlle", Method.GET);
+                       request.RequestFormat = DataFormat.Json;
+                       IRestResponse response = client.Execute(request);
+                       response.StatusCode.Should().Be(HttpStatusCode.OK);
+                   }
+            </code>
+            -->
+            </remarks>
+            <returns></returns>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.JobController.CountOffen">
+            <summary>
+            Ermittelt die Anzahl aller offenen Jobs
+            </summary>
+            <remarks>
+            ### REMARKS ###
+            - Die Authentifizierung über Basic Auth ist erforderlich
+            #### C# Examples ####
+            <!-- 
+            <code>
+                  using System.Net;
+                  using FluentAssertions;
+                  using NUnit.Framework;
+                  using RestSharp;
+                  using RestSharp.Authenticators;
+                   [Test]
+                   public void CountOffenTest()
+                   {
+                       var client = new RestClient("https://test.api.corpinter.net/mbd_semas_jobservice_api_2");
+                       client.Authenticator = new HttpBasicAuthenticator("test", "test");
+                       var request = new RestRequest("/Jobs/CountOffen", Method.GET);
+                       request.RequestFormat = DataFormat.Json;
+                       IRestResponse response = client.Execute(request);
+                       response.StatusCode.Should().Be(HttpStatusCode.OK);
+                   }
+            </code>
+            -->
+            </remarks>
+            <returns></returns>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.JobController.CountInArbeit">
+            <summary>
+            Ermittelt die Anzahl aller Jobs die aktuell in Arbeit sind.
+            </summary>
+            <remarks>
+            ### REMARKS ###
+            - Die Authentifizierung über Basic Auth ist erforderlich
+            #### C# Examples ####
+            <!-- 
+            <code>
+                  using System.Net;
+                  using FluentAssertions;
+                  using NUnit.Framework;
+                  using RestSharp;
+                  using RestSharp.Authenticators;
+                  [Test]
+                  public void CountCanceledTest()
+                  {
+                      var client = new RestClient("https://test.api.corpinter.net/mbd_semas_jobservice_api_2");
+                      client.Authenticator = new HttpBasicAuthenticator("test", "test");
+                      var request = new RestRequest("/Jobs/CountCanceled", Method.GET);
+                      request.RequestFormat = DataFormat.Json;
+                      IRestResponse response = client.Execute(request);
+                      response.StatusCode.Should().Be(HttpStatusCode.OK);
+                  }
+            </code>
+            -->
+            </remarks>
+            <returns></returns>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.JobController.CountCanceled">
+            <summary>
+            Ermittelt die Anzahl aller Jobs die gecanceled sind.
+            </summary>
+            <remarks>
+            ### REMARKS ###
+            - Die Authentifizierung über Basic Auth ist erforderlich
+            #### C# Examples ####
+            <!-- 
+            <code>
+                  using System.Net;
+                  using FluentAssertions;
+                  using NUnit.Framework;
+                  using RestSharp;
+                  using RestSharp.Authenticators;
+                  [Test]
+                  public void ErmittleGecancelteJobsTest()
+                  {
+                      var client = new RestClient("https://test.api.corpinter.net/mbd_semas_jobservice_api_2");
+                      client.Authenticator = new HttpBasicAuthenticator("test", "test");
+                      var request = new RestRequest("/Jobs/ErmittleGecancelteJobs", Method.GET);
+                      request.RequestFormat = DataFormat.Json;
+                      IRestResponse response = client.Execute(request);
+                      response.StatusCode.Should().Be(HttpStatusCode.OK);
+                  }
+            </code>
+            -->
+            </remarks>
+            <returns></returns>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.JobController.ErmittleUnerledigteJobs">
+            <summary>
+            Ermittelt Jobs die noch unerledigt sind.
+            </summary>
+            <remarks>
+            ### REMARKS ###
+            - Die Authentifizierung über Basic Auth ist erforderlich
+            #### C# Examples ####
+            <!-- 
+            <code>
+                  using System.Net;
+                  using FluentAssertions;
+                  using NUnit.Framework;
+                  using RestSharp;
+                  using RestSharp.Authenticators;
+                   [Test]
+                   public void ErmittleUnerledigteJobsTest()
+                   {
+                       var client = new RestClient("https://test.api.corpinter.net/mbd_semas_jobservice_api_2");
+                       client.Authenticator = new HttpBasicAuthenticator("test", "test");
+                       var request = new RestRequest("/Jobs/ErmittleUnerledigteJobs", Method.GET);
+                       request.RequestFormat = DataFormat.Json;
+                       IRestResponse response = client.Execute(request);
+                       response.StatusCode.Should().Be(HttpStatusCode.OK);
+                   }
+            </code>
+            -->
+            </remarks>
+            <returns></returns>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.JobController.ErmittleGecancelteJobs">
+            <summary>
+            Ermittelt Jobs die gecanceled wurden.
+            </summary>
+            <remarks>
+            ### REMARKS ###
+            - Die Authentifizierung über Basic Auth ist erforderlich
+            #### C# Examples ####
+            <!-- 
+            <code>
+                  using System.Net;
+                  using FluentAssertions;
+                  using NUnit.Framework;
+                  using RestSharp;
+                  using RestSharp.Authenticators;
+                   [Test]
+                   public void ErmittleGecancelteJobsTest()
+                   {
+                       var client = new RestClient("https://test.api.corpinter.net/mbd_semas_jobservice_api_2");
+                       client.Authenticator = new HttpBasicAuthenticator("test", "test");
+                       var request = new RestRequest("/Jobs/ErmittleGecancelteJobs", Method.GET);
+                       request.RequestFormat = DataFormat.Json;
+                       IRestResponse response = client.Execute(request);
+                       response.StatusCode.Should().Be(HttpStatusCode.OK);
+                   }
+            </code>
+            -->
+            </remarks>
+            <returns></returns>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.JobController.NeuerJob(Softcrafts.Jobs.Entities.Job)">
+            <summary>
+            Speichert einen neuen Job
+            </summary>
+            <param name="job"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Softcrafts.jobservice.API.Controllers.JobDetailController">
+            <summary>
+            JobDetailController
+            </summary>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.JobDetailController.#ctor">
+            <summary>
+            JobDetailController
+            </summary>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.JobDetailController.JobDetails(System.Guid)">
+            <summary>
+            Ermittelt eine Job anhand der UniqueId
+            </summary>
+            <param name="uniqueId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.JobDetailController.SetzeJobDone(System.Guid)">
+            <summary>
+            Setzt einen Job auf done
+            </summary>
+            <param name="uniqueId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.JobDetailController.SetzeJobInWork(System.Guid)">
+            <summary>
+            Setzt einen Job auf inWork
+            </summary>
+            <param name="uniqueId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.JobDetailController.SetzeJobIsCanceled(System.Guid)">
+            <summary>
+            Setzt einen Job auf IcCanceled
+            </summary>
+            <param name="uniqueId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.JobDetailController.LoescheJobIsCanceledFlag(System.Guid)">
+            <summary>
+            Setzt das canceled-Flag eines Jobs zurück
+            </summary>
+            <param name="uniqueId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Softcrafts.jobservice.API.Controllers.JobDetailController.LoescheJob(System.Guid)">
+            <summary>
+            Löscht einen Job
+            </summary>
+            <param name="uniqueId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Softcrafts.JobService.API.Models.PageLinkBuilder">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.PageLinkBuilder.FirstPage">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.PageLinkBuilder.LastPage">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.PageLinkBuilder.NextPage">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.PageLinkBuilder.PreviousPage">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.PageLinkBuilder.TotalPageCount">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:Softcrafts.JobService.API.Models.PageLinkBuilder.#ctor(System.Web.Http.Routing.UrlHelper,System.String,System.Object,System.Int32,System.Int32,System.Int64)">
+            <summary>
+            
+            </summary>
+            <param name="urlHelper"></param>
+            <param name="routeName"></param>
+            <param name="routeValues"></param>
+            <param name="pageNo"></param>
+            <param name="pageSize"></param>
+            <param name="totalRecordCount"></param>
+        </member>
+        <member name="T:Softcrafts.JobService.API.Models.ErrorInfoModel">
+            <summary>
+            Represents error information that can be shown to user.
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.ErrorInfoModel.Message">
+            <summary>
+            Gets or sets error message.
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.ErrorInfoModel.TimeStamp">
+            <summary>
+            Gets or sets error date and time.
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.ErrorInfoModel.RequestUri">
+            <summary>
+            Gets or sets URI, Web API rout that has failed to complete.
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.ErrorInfoModel.ErrorId">
+            <summary>
+            <see cref="T:System.Guid"/> value that represents correlation identifier that can be used for tracking purposes.
+            </summary>
+        </member>
+        <member name="T:Softcrafts.JobService.API.Models.HttpRequestModel">
+            <summary>
+            Represents a model that contain information and data about received HttpRequest.
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.HttpRequestModel.Method">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.HttpRequestModel.Host">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.HttpRequestModel.PathBase">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.HttpRequestModel.Path">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.HttpRequestModel.QueryString">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.HttpRequestModel.Scheme">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.HttpRequestModel.Protocol">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.HttpRequestModel.Body">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.HttpRequestModel.Uri">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Softcrafts.JobService.API.Models.HttpRequestModel.ConvertToString(System.IO.Stream)">
+            <summary>
+            
+            </summary>
+            <param name="stream"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Softcrafts.JobService.API.Models.JobResult`1">
+            <summary>
+            JobResult
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.JobResult`1.SemasResult">
+            <summary>
+            SemasResult
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.JobResult`1._links">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:Softcrafts.JobService.API.Models.JobResult`1._paging">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:Softcrafts.JobService.API.Security.CustomOperationFilter">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Softcrafts.JobService.API.Security.CustomOperationFilter.Apply(Swashbuckle.Swagger.Operation,Swashbuckle.Swagger.SchemaRegistry,System.Web.Http.Description.ApiDescription)">
+            <summary>
+            
+            </summary>
+            <param name="operation"></param>
+            <param name="schemaRegistry"></param>
+            <param name="apiDescription"></param>
+        </member>
+        <member name="T:Softcrafts.JobService.API.Security.BasicAuthAttribute">
+            <inheritdoc />
+        </member>
+        <member name="T:Softcrafts.JobService.API.Security.BasicAuthHttpModule">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Softcrafts.JobService.API.Security.BasicAuthHttpModule.Init(System.Web.HttpApplication)">
+            <inheritdoc />
+            <param name="context"></param>
+        </member>
+        <member name="M:Softcrafts.JobService.API.Security.BasicAuthHttpModule.Dispose">
+            <summary>
+            dispose any resources if needed
+            </summary>
+        </member>
+        <member name="T:Softcrafts.JobService.API.App_Start.ApiExceptionHandler">
+            <summary>
+            Represents implementation of <see cref="T:System.Web.Http.ExceptionHandling.ExceptionHandler"/>.
+            </summary>
+        </member>
+        <member name="M:Softcrafts.JobService.API.App_Start.ApiExceptionHandler.Handle(System.Web.Http.ExceptionHandling.ExceptionHandlerContext)">
+            <summary>
+            Overrides <see cref="M:System.Web.Http.ExceptionHandling.ExceptionHandler.Handle(System.Web.Http.ExceptionHandling.ExceptionHandlerContext)"/> method with code that sets friendly error message to be shown in browser.
+            </summary>
+            <param name="context">Instance fo <see cref="T:System.Web.Http.ExceptionHandling.ExceptionHandlerContext"/>.</param>
+        </member>
+        <member name="T:Softcrafts.JobService.API.App_Start.ApiExceptionLogger">
+            <summary>
+            Represents implementation of <see cref="T:System.Web.Http.ExceptionHandling.ExceptionLogger"/>.
+            </summary>
+        </member>
+        <member name="M:Softcrafts.JobService.API.App_Start.ApiExceptionLogger.LogAsync(System.Web.Http.ExceptionHandling.ExceptionLoggerContext,System.Threading.CancellationToken)">
+            <summary>
+            Overrides <see cref="M:System.Web.Http.ExceptionHandling.ExceptionLogger.LogAsync(System.Web.Http.ExceptionHandling.ExceptionLoggerContext,System.Threading.CancellationToken)"/> method with custom logger implementations.
+            </summary>
+            <param name="context">Instance of <see cref="T:System.Web.Http.ExceptionHandling.ExceptionLoggerContext"/>.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Softcrafts.JobService.API.App_Start.AutofacConfig">
+            <summary>
+            Represent Autofac configuration.
+            </summary>
+        </member>
+        <member name="F:Softcrafts.JobService.API.App_Start.AutofacConfig.Container">
+            <summary>
+            Configured instance of <see cref="T:Autofac.IContainer"/>
+            <remarks><see cref="M:Softcrafts.JobService.API.App_Start.AutofacConfig.Configure(System.Web.Http.HttpConfiguration)"/> must be called before trying to get Container instance.</remarks>
+            </summary>
+        </member>
+        <member name="M:Softcrafts.JobService.API.App_Start.AutofacConfig.Configure(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Initializes and configures instance of <see cref="T:Autofac.IContainer"/>.
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="T:Softcrafts.JobService.API.App_Start.CorsConfig">
+            <summary>
+            Represents CORS configuration.
+            </summary>
+        </member>
+        <member name="F:Softcrafts.JobService.API.App_Start.CorsConfig.Options">
+            <summary>
+            Instance of <see cref="T:Microsoft.Owin.Cors.CorsOptions"/> that is set to allow all by default.
+            </summary>
+        </member>
+        <member name="M:Softcrafts.JobService.API.App_Start.CorsConfig.ConfigureCors(System.String)">
+            <summary>
+            Initializes and configures <see cref="T:Microsoft.Owin.Cors.CorsOptions"/> instance.
+            </summary>
+            <param name="origins">String of allowed origins delimited by: ';'</param>
+        </member>
+        <member name="T:Softcrafts.JobService.API.App_Start.FormatterConfig">
+            <summary>
+            Represents formatter configuration.
+            </summary>
+        </member>
+        <member name="M:Softcrafts.JobService.API.App_Start.FormatterConfig.Configure(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Configures formatter to use JSON and removes XML formatter.
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="T:Softcrafts.JobService.API.App_Start.RouteConfig">
+            <summary>
+            Represents route configuration.
+            </summary>
+        </member>
+        <member name="M:Softcrafts.JobService.API.App_Start.RouteConfig.Configure(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Configures Web API routes.
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="T:Softcrafts.JobService.API.App_Start.ServiceConfig">
+            <summary>
+            Represents configuration for <see cref="T:System.Web.Http.ExceptionHandling.IExceptionHandler"/> and <see cref="T:System.Web.Http.ExceptionHandling.IExceptionLogger"/>.
+            </summary>
+        </member>
+        <member name="M:Softcrafts.JobService.API.App_Start.ServiceConfig.Configure(System.Web.Http.HttpConfiguration)">
+            <summary>
+            COnfigures custom implementations for: <see cref="T:System.Web.Http.ExceptionHandling.IExceptionHandler"/> and <see cref="T:System.Web.Http.ExceptionHandling.IExceptionLogger"/>.
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="T:Softcrafts.JobService.API.AddJobSchemaExamples">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Softcrafts.JobService.API.AddJobSchemaExamples.Apply(Swashbuckle.Swagger.Schema,Swashbuckle.Swagger.SchemaRegistry,System.Type)">
+            <summary>
+            
+            </summary>
+            <param name="schema"></param>
+            <param name="schemaRegistry"></param>
+            <param name="type"></param>
+        </member>
+        <member name="T:Softcrafts.JobService.API.RemoveJobDetailsFromSwagger">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Softcrafts.JobService.API.RemoveJobDetailsFromSwagger.Apply(Swashbuckle.Swagger.SwaggerDocument,Swashbuckle.Swagger.SchemaRegistry,System.Web.Http.Description.IApiExplorer)">
+            <summary>
+            
+            </summary>
+            <param name="swaggerDoc"></param>
+            <param name="schemaRegistry"></param>
+            <param name="apiExplorer"></param>
+        </member>
+        <member name="T:Softcrafts.JobService.API.SwaggerConfig">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Softcrafts.JobService.API.SwaggerConfig.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Softcrafts.JobService.API.SwaggerConfig.Configure(System.Web.Http.HttpConfiguration)">
+            <summary>
+            
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="T:Softcrafts.JobService.API.Startup">
+            <summary>
+            Represents the entry point into an application.
+            </summary>
+        </member>
+        <member name="M:Softcrafts.JobService.API.Startup.Configuration(Owin.IAppBuilder)">
+            <summary>
+            Specifies how the ASP.NET application will respond to individual HTTP request.
+            </summary>
+            <param name="app">Instance of <see cref="T:Owin.IAppBuilder"/>.</param>
+        </member>
+    </members>
+</doc>

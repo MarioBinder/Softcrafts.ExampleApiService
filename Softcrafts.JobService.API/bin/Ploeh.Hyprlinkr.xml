@@ -1,0 +1,847 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ploeh.Hyprlinkr</name>
+    </assembly>
+    <members>
+        <member name="T:Ploeh.Hyprlinkr.DefaultRouteDispatcher">
+            <summary>
+            The default Strategy for dispatching Action Methods to a route name, by
+            always dispatching to a single, named route.
+            </summary>
+            <seealso cref="T:Ploeh.Hyprlinkr.IRouteDispatcher"/>
+        </member>
+        <member name="T:Ploeh.Hyprlinkr.IRouteDispatcher">
+            <summary>
+            A Strategy for dispatching a method to a named route.
+            </summary>
+            <remarks>
+            <para>
+            In the ASP.NET Web API, routes added to an application's configured
+            <see cref="T:System.Web.Http.HttpRouteCollection"/> have names. When an
+            URI is to be built from the routing configuration, one must supply the
+            name of the route to be used.
+            </para>
+            <para>
+            This interface represents a Strategy for selecting a route name given
+            an Action Method.
+            </para>
+            </remarks>
+            <seealso cref="M:Ploeh.Hyprlinkr.IRouteDispatcher.Dispatch(System.Linq.Expressions.MethodCallExpression,System.Collections.Generic.IDictionary{System.String,System.Object})"/>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.IRouteDispatcher.Dispatch(System.Linq.Expressions.MethodCallExpression,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Provides dispatch information based on an Action Method.
+            </summary>
+            <param name="method">The method expression.</param>
+            <param name="routeValues">Route values.</param>
+            <returns>
+            An object containing the route name, as well as the route values.
+            </returns>
+            <remarks>
+            <para>
+            Note to implementers: Pass <paramref name="routeValues" /> through
+            to the return value if you don't modify it. However, if you wish to
+            add or remove values from the dictionary, you should create a copy
+            and mutate that copy, leaving the input unmodified.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.DefaultRouteDispatcher.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ploeh.Hyprlinkr.DefaultRouteDispatcher"/> class.
+            </summary>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.DefaultRouteDispatcher.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the
+            <see cref="T:Ploeh.Hyprlinkr.DefaultRouteDispatcher"/> class with the supplied route
+            name.
+            </summary>
+            <param name="routeName">
+            The route name which will be used by the
+            <see cref="M:Ploeh.Hyprlinkr.DefaultRouteDispatcher.Dispatch(System.Linq.Expressions.MethodCallExpression,System.Collections.Generic.IDictionary{System.String,System.Object})"/>
+            method as the <see cref="P:Ploeh.Hyprlinkr.Rouple.RouteName"/> value.
+            </param>
+            <remarks>
+            <para>
+            After initialization, the <paramref name="routeName"/> value is
+            available through the <see cref="P:Ploeh.Hyprlinkr.DefaultRouteDispatcher.RouteName"/> property.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.DefaultRouteDispatcher.Dispatch(System.Linq.Expressions.MethodCallExpression,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Provides dispatch information based on an Action Method.
+            </summary>
+            <param name="method">The method expression.</param>
+            <param name="routeValues">Route values.</param>
+            <returns>
+            An object containing the route name, as well as the route values.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">method</exception>
+            <remarks>
+            <para>
+            The returned <see cref="P:Ploeh.Hyprlinkr.Rouple.RouteName"/> will be the value of
+            the <see cref="P:Ploeh.Hyprlinkr.DefaultRouteDispatcher.RouteName"/> property.
+            </para>
+            <para>
+            The returned <see cref="P:Ploeh.Hyprlinkr.Rouple.RouteValues"/> will be all entries
+            of the <paramref name="routeValues"/>, plus a value for an
+            additional "controller" key, derived from
+            <paramref name="method"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:Ploeh.Hyprlinkr.DefaultRouteDispatcher.RouteName">
+            <summary>
+            Gets the route name.
+            </summary>
+            <seealso cref="M:Ploeh.Hyprlinkr.DefaultRouteDispatcher.#ctor(System.String)"/>
+        </member>
+        <member name="T:Ploeh.Hyprlinkr.ScalarRouteValuesQuery">
+            <summary>
+            Represents a query which projects an expression's parameter values into
+            a dictionary by converting each parameter value to a string.
+            </summary>
+            <remarks>
+            <para>
+            This implementation of <see cref="T:Ploeh.Hyprlinkr.IRouteValuesQuery"/> assumes that
+            each method argument is a scalar (i.e. primitive) value which can be
+            converted to a string.
+            </para>
+            <para>
+            To support more sophisticated projection of route values the
+            <see cref="M:Ploeh.Hyprlinkr.ScalarRouteValuesQuery.GetParameterValues(System.Linq.Expressions.MethodCallExpression,System.Reflection.ParameterInfo)"/> method can be overridden in a derived
+            class.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:Ploeh.Hyprlinkr.IRouteValuesQuery">
+            <summary>
+            Represents a query which projects an expression's parameter values into
+            a dictionary.
+            </summary>
+            <remarks>
+            <para>
+            A <see cref="T:System.Linq.Expressions.MethodCallExpression"/> represents a call to a method. If
+            the method takes arguments, the expression contains these arguments.
+            The <see cref="M:Ploeh.Hyprlinkr.IRouteValuesQuery.GetRouteValues(System.Linq.Expressions.MethodCallExpression)"/> method turns the argument values into
+            strings and builds a dictionary of them.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.IRouteValuesQuery.GetRouteValues(System.Linq.Expressions.MethodCallExpression)">
+            <summary>Gets the route values.</summary>
+            <param name="methodCallExpression">A method call expression.</param>
+            <returns>
+            A dictionary of the method's arguments converted into strings.
+            </returns>
+            <remarks>
+            <para>
+            Note to implementers:
+            </para>
+            <para>
+            A <see cref="T:System.Linq.Expressions.MethodCallExpression"/> represents a call to a
+            method. If the method takes arguments, the expression contains
+            these arguments. The GetRouteValues method turns the argument
+            values into strings and builds a dictionary of them.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.ScalarRouteValuesQuery.GetRouteValues(System.Linq.Expressions.MethodCallExpression)">
+            <summary>Gets the route values.</summary>
+            <param name="methodCallExpression">
+            A method call expression.
+            </param>
+            <returns>
+            A dictionary of the method's arguments converted into strings.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            methodCallExpression is null
+            </exception>
+            <remarks>
+            <para>
+            A <see cref="T:System.Linq.Expressions.MethodCallExpression"/> represents a call to a
+            method. If the method takes arguments, the expression contains
+            these arguments. The GetRouteValues method turns the argument
+            values into strings and builds a dictionary of them, assuming that
+            each value is a scalar (i.e. primitive) value which can be directly
+            converted into a string.
+            </para>
+            <para>
+            Each parameter is resolved into a dictionary by invoking the
+            virtual <see cref="M:Ploeh.Hyprlinkr.ScalarRouteValuesQuery.GetParameterValues(System.Linq.Expressions.MethodCallExpression,System.Reflection.ParameterInfo)"/> method, so a derived
+            class can override this Template Method to support more
+            sophisticated serialization scenarios.
+            </para>
+            </remarks>
+            <seealso cref="M:Ploeh.Hyprlinkr.ScalarRouteValuesQuery.GetParameterValues(System.Linq.Expressions.MethodCallExpression,System.Reflection.ParameterInfo)"/>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.ScalarRouteValuesQuery.GetParameterValues(System.Linq.Expressions.MethodCallExpression,System.Reflection.ParameterInfo)">
+            <summary>Gets the parameter value for a method argument.</summary>
+            <param name="methodCallExpression">
+            A method call expression.
+            </param>
+            <param name="parameterInfo">
+            The parameter info for which the value should be returned.
+            </param>
+            <returns>
+            A dictionary with the single (scalar) value of the method argument
+            identified by <paramref name="parameterInfo"/>
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            methodCallExpression is null
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            parameterInfo is null
+            </exception>
+            <remarks>
+            <para>
+            This method is called by <see cref="M:Ploeh.Hyprlinkr.ScalarRouteValuesQuery.GetRouteValues(System.Linq.Expressions.MethodCallExpression)"/> to serialize
+            method arguments into route values. It assumes that the method
+            argument is a scalar (i.e. primitive) value which can be converted
+            into a single string. The returned dictionary contains this scalar
+            string keyed by the name of the parameter.
+            </para>
+            <para>
+            This is a Template Method, so derived classes can override it to
+            support more sophisticated serialization scenarios.
+            </para>
+            </remarks>
+            <seealso cref="M:Ploeh.Hyprlinkr.ScalarRouteValuesQuery.GetRouteValues(System.Linq.Expressions.MethodCallExpression)"/>
+        </member>
+        <member name="T:Ploeh.Hyprlinkr.IActionVerifier">
+            <summary>
+            Verifies via type-safe expressions that an <see cref="T:System.Web.Http.Controllers.HttpActionContext"/> calls a specific controller action.
+            </summary>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.IActionVerifier.Verify``1(System.Web.Http.Controllers.HttpActionContext,System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Verifies that the specified action context refers to the same controller action as the action specified by the expression.
+            </summary>
+            <typeparam name="TController">
+            The type of the controller.
+            </typeparam>
+            <param name="actionContext">
+            The action context to verify.
+            </param>
+            <param name="expectedAction">
+            The expression defining the expected action.
+            </param>
+            <returns>
+                <c>true</c> if the specified action context refers to the same controller action as the supplied expression; otherwise, <c>false</c> .
+            </returns>
+        </member>
+        <member name="T:Ploeh.Hyprlinkr.IResourceLinkParser">
+            <summary>
+            Parses resource links.
+            </summary>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.IResourceLinkParser.Parse(System.Uri)">
+            <summary>
+            Parses the specified URI.
+            </summary>
+            <param name="uri">
+            The URI to parse.
+            </param>
+            <returns>
+            The <see cref="T:System.Web.Http.Controllers.HttpActionContext"/> with bound parameter values.
+            </returns>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.IResourceLinkParser.TryParse(System.Uri,System.Web.Http.Controllers.HttpActionContext@)">
+            <summary>
+            Tries to parse the specified URI.
+            </summary>
+            <param name="uri">
+            The URI to parse.
+            </param>
+            <param name="actionContext">
+            The <see cref="T:System.Web.Http.Controllers.HttpActionContext"/> with bound parameter values.
+            </param>
+            <returns>
+                <c>true</c> in case the URI could be parsed successfully; otherwise, <c>false</c> .
+            </returns>
+        </member>
+        <member name="T:Ploeh.Hyprlinkr.IResourceLinker">
+            <summary>
+            Creates URIs from type-safe expressions.
+            </summary>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.IResourceLinker.GetUri``1(System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Creates an URI based on a type-safe expression.
+            </summary>
+            <typeparam name="T">
+            The type of resource to link to. This will typically be the type of an
+            <see cref="T:System.Web.Http.ApiController"/>, but doesn't have to be.
+            </typeparam>
+            <param name="method">
+            An expression wich identifies the action method that serves the desired resource.
+            </param>
+            <returns>
+            An <see cref="T:System.Uri"/> instance which represents the resource identifed by
+            <paramref name="method"/>.
+            </returns>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.IResourceLinker.GetUri``2(System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Creates an URI based on a type-safe expression.
+            </summary>
+            <typeparam name="T">
+            The type of resource to link to. This will typically be the type of
+            an <see cref="T:System.Web.Http.ApiController"/>, but doesn't have
+            to be.
+            </typeparam>
+            <typeparam name="TResult">
+            The return type of the Action Method of the resource.
+            </typeparam>
+            <param name="method">
+            An expression wich identifies the action method that serves the
+            desired resource.
+            </param>
+            <returns>
+            An <see cref="T:System.Uri"/> instance which represents the resource
+            identifed by <paramref name="method"/>.
+            </returns>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.IResourceLinker.GetUriAsync``2(System.Linq.Expressions.Expression{System.Func{``0,System.Threading.Tasks.Task{``1}}})">
+            <summary>
+            Creates an URI based on a type-safe expression.
+            </summary>
+            <typeparam name="T">
+            The type of resource to link to. This will typically be the type of
+            an <see cref="T:System.Web.Http.ApiController"/>, but doesn't have
+            to be.
+            </typeparam>
+            <typeparam name="TResult">
+            The return type of the Action Method of the resource.
+            </typeparam>
+            <param name="method">
+            An expression wich identifies the action method that serves the
+            desired resource.
+            </param>
+            <returns>
+            A <see cref="T:System.Threading.Tasks.Task`1"/> instance which represents the resource
+            identifed by <paramref name="method"/>.
+            </returns>
+        </member>
+        <member name="T:Ploeh.Hyprlinkr.ResourceLinkParser">
+            <summary>
+                <para> This class parses URIs into a structured representation. The <see cref="T:System.Web.Http.Controllers.HttpActionContext"/> class is used as said representation. </para>
+                <para> Additionally, this class is capable of verifying that a <see cref="T:System.Web.Http.Controllers.HttpActionContext"/> matches a specific controller action. </para>
+            </summary>
+            <remarks>
+            Example: <code>
+            <![CDATA[
+            HttpContextAction contextAction;
+            if(linkParser.TryParseUri(uri, out contextAction) && linkParser.Verify<SomeController>(x => x.SomeAction(Arg<int>.Any)))
+            {
+                var id = (int)contextAction.ActionArguments["id"];
+            }
+            ]]>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.ResourceLinkParser.#ctor(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ploeh.Hyprlinkr.ResourceLinkParser"/> class.
+            </summary>
+            <param name="configuration">
+            The configuration to use to parse the URIs.
+            </param>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.ResourceLinkParser.Parse(System.Uri)">
+            <summary>
+            Parses the specified URI.
+            </summary>
+            <param name="uri">
+            The URI to parse.
+            </param>
+            <returns>
+            The <see cref="T:System.Web.Http.Controllers.HttpActionContext"/> with bound parameter values.
+            </returns>
+            <exception cref="T:System.ArgumentException">The URI is invalid or no action matches the specified URI.</exception>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.ResourceLinkParser.TryParse(System.Uri,System.Web.Http.Controllers.HttpActionContext@)">
+            <summary>
+            Tries to parse the specified URI.
+            </summary>
+            <param name="uri">
+            The URI to parse.
+            </param>
+            <param name="actionContext">
+            The <see cref="T:System.Web.Http.Controllers.HttpActionContext"/> with bound parameter values.
+            </param>
+            <returns>
+                <c>true</c> in case the URI could be parsed successfully and matched to an action; otherwise, <c>false</c> .
+            </returns>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.ResourceLinkParser.Verify``1(System.Web.Http.Controllers.HttpActionContext,System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Verifies that the specified action context refers to the same controller action as the action specified by the expression.
+            </summary>
+            <typeparam name="TController">
+            The type of the controller.
+            </typeparam>
+            <param name="actionContext">
+            The action context to verify.
+            </param>
+            <param name="expectedAction">
+            The expression defining the expected action.
+            </param>
+            <returns>
+                <c>true</c> if the specified action context refers to the same controller action as the supplied expression; otherwise, <c>false</c> .
+            </returns>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.ResourceLinkParser.GetActionMethod(System.Web.Http.Controllers.HttpActionDescriptor)">
+            <summary>
+            Gets the <see cref="T:System.Reflection.MethodInfo"/> object the supplied <see cref="T:System.Web.Http.Controllers.HttpActionDescriptor"/> describes.
+            </summary>
+            <param name="actionDescriptor">
+            The action descriptor.
+            </param>
+            <returns>
+            The <see cref="T:System.Reflection.MethodInfo"/> object the supplied <see cref="T:System.Web.Http.Controllers.HttpActionDescriptor"/> describes or <c>null</c> if no matching method is found.
+            </returns>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.ResourceLinkParser.GetControllerName(System.Web.Http.Routing.IHttpRouteData)">
+            <summary>
+            Gets the name of the controller for the supplied route data.
+            </summary>
+            <param name="routeData">
+            The route data.
+            </param>
+            <returns>
+            The name of the controller or <c>null</c> if the route data doesn't contain the name of the controller.
+            </returns>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.ResourceLinkParser.GetActionDescriptor(System.Web.Http.Controllers.HttpControllerContext)">
+            <summary>
+            Gets the action descriptor.
+            </summary>
+            <param name="controllerContext">
+            The controller context.
+            </param>
+            <returns>
+            The action descriptor for the controller context.
+            </returns>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.ResourceLinkParser.GetControllerContext(System.Uri)">
+            <summary>
+            Gets the <see cref="T:System.Web.Http.Controllers.HttpControllerContext"/> for the supplied <see cref="T:System.Uri"/>.
+            </summary>
+            <param name="uri">
+            The URI.
+            </param>
+            <returns>
+            The <see cref="T:System.Web.Http.Controllers.HttpControllerContext"/> instance for the supplier URI.
+            </returns>
+        </member>
+        <member name="P:Ploeh.Hyprlinkr.ResourceLinkParser.Configuration">
+            <summary>
+            Gets the configuration used to parse the URIs.
+            </summary>
+        </member>
+        <member name="T:Ploeh.Hyprlinkr.Rouple">
+            <summary>
+            A route tuple: a rouple - pardon the pun.
+            </summary>
+            <remarks>
+            <para>
+            This class is simply a tuple of <see cref="P:Ploeh.Hyprlinkr.Rouple.RouteName"/> and
+            <see cref="P:Ploeh.Hyprlinkr.Rouple.RouteValues"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.Rouple.#ctor(System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ploeh.Hyprlinkr.Rouple"/> class.
+            </summary>
+            <param name="routeName">A route name.</param>
+            <param name="routeValues">Route values.</param>
+            <remarks>
+            <para>
+            The <paramref name="routeName"/> is available after initialization
+            via the <see cref="P:Ploeh.Hyprlinkr.Rouple.RouteName"/> property.
+            </para>
+            <para>
+            The <paramref name="routeValues"/> are available after
+            initialization via the <see cref="P:Ploeh.Hyprlinkr.Rouple.RouteValues"/> property.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:Ploeh.Hyprlinkr.Rouple.RouteName">
+            <summary>
+            Gets the route name.
+            </summary>
+            <seealso cref="M:Ploeh.Hyprlinkr.Rouple.#ctor(System.String,System.Collections.Generic.IDictionary{System.String,System.Object})"/>
+        </member>
+        <member name="P:Ploeh.Hyprlinkr.Rouple.RouteValues">
+            <summary>
+            Gets the route values.
+            </summary>
+            <seealso cref="M:Ploeh.Hyprlinkr.Rouple.#ctor(System.String,System.Collections.Generic.IDictionary{System.String,System.Object})"/>
+        </member>
+        <member name="T:Ploeh.Hyprlinkr.RouteLinker">
+            <summary>
+            Creates URIs from type-safe expressions, based on routing configuration.
+            </summary>
+            <remarks>
+            <para>
+            The purpose of this class is to create correct URIs to other resources within an ASP.NET
+            Web API solution. Instead of hard-coding URIs or building them from hard-coded URI
+            templates which may go out of sync with the routes defined in an
+            <see cref="T:System.Web.Http.HttpRouteCollection"/>, the RouteLinker class provides a method
+            where URIs can be built from the routes defined in the route collection.
+            </para>
+            </remarks>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.GetUri``1(System.Linq.Expressions.Expression{System.Action{``0}})"/>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ploeh.Hyprlinkr.RouteLinker"/> class.
+            </summary>
+            <param name="request">The current request.</param>
+            <remarks>
+            <para>
+            After initialization, the <paramref name="request"/> value is available through the
+            <see cref="P:Ploeh.Hyprlinkr.RouteLinker.Request"/> property.
+            </para>
+            </remarks>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage,Ploeh.Hyprlinkr.IRouteDispatcher)"/>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage,Ploeh.Hyprlinkr.IRouteValuesQuery)"/>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage,Ploeh.Hyprlinkr.IRouteValuesQuery,Ploeh.Hyprlinkr.IRouteDispatcher)"/>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage,Ploeh.Hyprlinkr.IRouteValuesQuery)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ploeh.Hyprlinkr.RouteLinker"/> class.
+            </summary>
+            <param name="request">The current request.</param>
+            <param name="routeValuesQuery">
+            A Strategy for extracting route values.
+            </param>
+            <remarks>
+            <para>
+            This constructor overload requires a custom
+            <see cref="T:Ploeh.Hyprlinkr.IRouteValuesQuery"/>. If you don't want to use a custom
+            query, you can use the simpler constructor overload.
+            </para>
+            <para>
+            After initialization, the <paramref name="request"/> value is
+            available through the <see cref="P:Ploeh.Hyprlinkr.RouteLinker.Request"/> property, and the
+            <paramref name="routeValuesQuery"/> value is available via the
+            <see cref="P:Ploeh.Hyprlinkr.RouteLinker.RouteValuesQuery"/> property.
+            </para>
+            </remarks>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage)"/>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage,Ploeh.Hyprlinkr.IRouteDispatcher)"/>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage,Ploeh.Hyprlinkr.IRouteValuesQuery,Ploeh.Hyprlinkr.IRouteDispatcher)"/>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage,Ploeh.Hyprlinkr.IRouteDispatcher)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ploeh.Hyprlinkr.RouteLinker"/> class.
+            </summary>
+            <param name="request">The current request.</param>
+            <param name="dispatcher">A custom dispatcher.</param>
+            <remarks>
+            <para>
+            This constructor overload requires a custom <see cref="T:Ploeh.Hyprlinkr.IRouteDispatcher"/>. If you
+            don't want to use a custom dispatcher, you can use the simpler constructor overload.
+            </para>
+            <para>
+            After initialization, the <paramref name="request"/> value is available through the
+            <see cref="P:Ploeh.Hyprlinkr.RouteLinker.Request"/> property; and the <paramref name="dispatcher"/> is available
+            through the <see cref="P:Ploeh.Hyprlinkr.RouteLinker.RouteDispatcher"/> property.
+            </para>
+            </remarks>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage)"/>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage,Ploeh.Hyprlinkr.IRouteValuesQuery)"/>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage,Ploeh.Hyprlinkr.IRouteValuesQuery,Ploeh.Hyprlinkr.IRouteDispatcher)"/>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage,Ploeh.Hyprlinkr.IRouteValuesQuery,Ploeh.Hyprlinkr.IRouteDispatcher)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ploeh.Hyprlinkr.RouteLinker"/> class.
+            </summary>
+            <param name="request">The current request.</param>
+            <param name="routeValuesQuery">
+            A Strategy for extracting route values.
+            </param>
+            <param name="dispatcher">A custom dispatcher.</param>
+            <remarks>
+            <para>
+            This constructor overload requires custom Strategies to be
+            injected. If you don't want to supply one or both custom
+            Strategies, you can use a simpler constructor overload.
+            </para>
+            <para>
+            After initialization, the parameter values are available as
+            read-only properties.
+            </para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            request is null
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            routeValuesQuery is null
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            dispatcher is null
+            </exception>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage)"/>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage,Ploeh.Hyprlinkr.IRouteValuesQuery)"/>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage,Ploeh.Hyprlinkr.IRouteDispatcher)"/>
+            <seealso cref="P:Ploeh.Hyprlinkr.RouteLinker.Request"/>
+            <see cref="P:Ploeh.Hyprlinkr.RouteLinker.RouteValuesQuery"/>
+            <see cref="P:Ploeh.Hyprlinkr.RouteLinker.RouteDispatcher"/>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.RouteLinker.GetUri``2(System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Creates an URI based on a type-safe expression.
+            </summary>
+            <typeparam name="T">
+            The type of resource to link to. This will typically be the type of an
+            <see cref="T:System.Web.Http.ApiController"/>, but doesn't have to be.
+            </typeparam>
+            <typeparam name="TResult">
+            The return type of the Action Method of the resource.
+            </typeparam>
+            <param name="method">
+            An expression wich identifies the action method that serves the desired resource.
+            </param>
+            <returns>
+            An <see cref="T:System.Uri"/> instance which represents the resource identifed by
+            <paramref name="method"/>.
+            </returns>
+            <remarks>
+            <para>
+            This method is used to build valid URIs for resources represented by code. In the
+            ASP.NET Web API, resources are served by Action Methods on Controllers. If building a
+            REST service with hypermedia controls, you will want to create links to various other
+            resources in your service. Viewed from code, these resources are encapsulated by Action
+            Methods, but you need to build valid URIs that, when requested via HTTP, invokes the
+            desired Action Method.
+            </para>
+            <para>
+            The target Action Method can be type-safely identified by the
+            <paramref name="method"/> expression. The <typeparamref name="T"/> type argument will
+            typically indicate a particular class which derives from
+            <see cref="T:System.Web.Http.ApiController"/>, but there's no generic constraint on the
+            type argument, so this is not required.
+            </para>
+            <para>
+            Based on the Action Method identified by the supplied expression, the ASP.NET Web API
+            routing configuration is consulted to build an appropriate URI which matches the Action
+            Method. The routing configuration is pulled from the <see cref="T:System.Net.Http.HttpRequestMessage"/>
+            instance supplied to the constructor of the <see cref="T:Ploeh.Hyprlinkr.RouteLinker"/> class.
+            </para>
+            <para>
+            This overload mostly exists to support F# clients.
+            </para>
+            </remarks>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage)"/>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage,Ploeh.Hyprlinkr.IRouteDispatcher)"/>
+            <example>
+            This example demonstrates how an F# client can create an <see cref="T:System.Uri"/> instance for a GetById
+            method defined on a FooController class.
+            <code>
+            let uri = linker.GetUri(fun (c : FooController) -&gt; c.GetById(1337))
+            </code>
+            Given the default API route configuration, the resulting URI will be something like
+            this (assuming that the base URI is http://localhost): http://localhost/api/foo/1337
+            </example>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.RouteLinker.GetUri``1(System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Creates an URI based on a type-safe expression.
+            </summary>
+            <typeparam name="T">
+            The type of resource to link to. This will typically be the type of an
+            <see cref="T:System.Web.Http.ApiController"/>, but doesn't have to be.
+            </typeparam>
+            <param name="method">
+            An expression wich identifies the action method that serves the desired resource.
+            </param>
+            <returns>
+            An <see cref="T:System.Uri"/> instance which represents the resource identifed by
+            <paramref name="method"/>.
+            </returns>
+            <remarks>
+            <para>
+            This method is used to build valid URIs for resources represented by code. In the
+            ASP.NET Web API, resources are served by Action Methods on Controllers. If building a
+            REST service with hypermedia controls, you will want to create links to various other
+            resources in your service. Viewed from code, these resources are encapsulated by Action
+            Methods, but you need to build valid URIs that, when requested via HTTP, invokes the
+            desired Action Method.
+            </para>
+            <para>
+            The target Action Method can be type-safely identified by the
+            <paramref name="method"/> expression. The <typeparamref name="T"/> type argument will
+            typically indicate a particular class which derives from
+            <see cref="T:System.Web.Http.ApiController"/>, but there's no generic constraint on the
+            type argument, so this is not required.
+            </para>
+            <para>
+            Based on the Action Method identified by the supplied expression, the ASP.NET Web API
+            routing configuration is consulted to build an appropriate URI which matches the Action
+            Method. The routing configuration is pulled from the <see cref="T:System.Net.Http.HttpRequestMessage"/>
+            instance supplied to the constructor of the <see cref="T:Ploeh.Hyprlinkr.RouteLinker"/> class.
+            </para>
+            </remarks>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage)"/>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage,Ploeh.Hyprlinkr.IRouteDispatcher)"/>
+            <example>
+            This example demonstrates how to create an <see cref="T:System.Uri"/> instance for a GetById
+            method defined on a FooController class.
+            <code>
+            var uri = linker.GetUri&lt;FooController&gt;(r =&gt; r.GetById(1337));
+            </code>
+            Given the default API route configuration, the resulting URI will be something like
+            this (assuming that the base URI is http://localhost): http://localhost/api/foo/1337
+            </example>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.RouteLinker.GetUriAsync``2(System.Linq.Expressions.Expression{System.Func{``0,System.Threading.Tasks.Task{``1}}})">
+            <summary>
+            Creates an URI based on a type-safe expression.
+            </summary>
+            <typeparam name="T">
+            The type of resource to link to. This will typically be the type of
+            an <see cref="T:System.Web.Http.ApiController"/>, but doesn't have
+            to be.
+            </typeparam>
+            <typeparam name="TResult">
+            The return type of the Action Method of the resource.
+            </typeparam>
+            <param name="method">
+            An expression wich identifies the action method that serves the
+            desired resource.
+            </param>
+            <returns>
+            A <see cref="T:System.Threading.Tasks.Task`1"/> instance which represents the resource
+            identifed by <paramref name="method"/>.
+            </returns>
+            <remarks>
+            <para>
+            This method is used to build valid URIs for resources represented
+            by code. In the ASP.NET Web API, resources are served by Action
+            Methods on Controllers. If building a REST service with hypermedia
+            controls, you will want to create links to various other resources
+            in your service. Viewed from code, these resources are encapsulated
+            by Action Methods, but you need to build valid URIs that, when
+            requested via HTTP, invokes the desired Action Method.
+            </para>
+            <para>
+            The target Action Method can be type-safely identified by the
+            <paramref name="method"/> expression.
+            The <typeparamref name="T"/> type argument will typically indicate
+            a particular class which derives from
+            <see cref="T:System.Web.Http.ApiController"/>, but there's no
+            generic constraint on the type argument, so this is not required.
+            </para>
+            <para>
+            Based on the Action Method identified by the supplied expression,
+            the ASP.NET Web API routing configuration is consulted to build an
+            appropriate URI which matches the Action Method. The routing
+            configuration is pulled from the <see cref="T:System.Net.Http.HttpRequestMessage"/>
+            instance supplied to the constructor of the
+            <see cref="T:Ploeh.Hyprlinkr.RouteLinker"/> class.
+            </para>
+            <para>
+            This overload supports extracting valid URI instances from async
+            Controllers.
+            </para>
+            </remarks>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage)"/>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage,Ploeh.Hyprlinkr.IRouteDispatcher)"/>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.GetUri``1(System.Linq.Expressions.Expression{System.Action{``0}})"/>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.GetUri``2(System.Linq.Expressions.Expression{System.Func{``0,``1}})"/>
+            <exception cref="T:System.ArgumentNullException">method is null</exception>
+            <exception cref="T:System.ArgumentException">The expression's body isn't a MethodCallExpression. The code block supplied should invoke a method.\nExample: x =&gt; x.Foo().</exception>
+            <example>
+            This example demonstrates how to create an <see cref="T:System.Uri"/>
+            instance for a Get method defined on an AsyncController class.
+            <code>
+            Uri actual = linker.GetUriAsync((AsyncController c) =&gt; c.Get(id)).Result;
+            </code>
+            Given the default API route configuration, the resulting URI will
+            be something like this (assuming that the base URI is
+            http://localhost): http://localhost/api/async/1337
+            </example>
+        </member>
+        <member name="P:Ploeh.Hyprlinkr.RouteLinker.Request">
+            <summary>
+            Gets the request that this instance uses to create URIs.
+            </summary>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage)"/>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage,Ploeh.Hyprlinkr.IRouteDispatcher)"/>
+        </member>
+        <member name="P:Ploeh.Hyprlinkr.RouteLinker.RouteValuesQuery">
+            <summary>Gets the route values query.</summary>
+        </member>
+        <member name="P:Ploeh.Hyprlinkr.RouteLinker.RouteDispatcher">
+            <summary>
+            Gets the route dispatcher.
+            </summary>
+            <seealso cref="M:Ploeh.Hyprlinkr.RouteLinker.#ctor(System.Net.Http.HttpRequestMessage,Ploeh.Hyprlinkr.IRouteDispatcher)"/>
+        </member>
+        <member name="T:Ploeh.Hyprlinkr.UrlHelperExtensions">
+            <summary>
+            A class with extension methods for UrlHelper
+            </summary>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.UrlHelperExtensions.GetLink``2(System.Web.Http.Routing.UrlHelper,System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Returns URI matching helper's request and expression using RouteLinker's default route dispatcher
+            </summary>
+            <typeparam name="T">A class that derives from ApiController</typeparam>
+            <typeparam name="TResult">Any result type</typeparam>
+            <param name="helper">Provides the requested URI via helper.Request</param>
+            <param name="expression">Method call expression of T</param>
+            <returns>URI for the request and controller expression. </returns>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.UrlHelperExtensions.GetLink``1(System.Web.Http.Routing.UrlHelper,System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Returns URI matching helper's request and expression using RouteLinker's default route dispatcher.          
+            </summary>
+            <typeparam name="T">A class that derives from ApiController</typeparam>        
+            <param name="helper">Provides the requested URI via helper.Request</param>
+            <param name="expression">Expression of T</param>
+            <returns>URI for the request and controller expression. </returns>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.UrlHelperExtensions.GetLink``2(System.Web.Http.Routing.UrlHelper,System.Linq.Expressions.Expression{System.Func{``0,``1}},Ploeh.Hyprlinkr.IRouteDispatcher)">
+            <summary>
+            Returns URI matching helper's request and expression using provided route dispatcher         
+            </summary>
+            <typeparam name="T">A class that derives from ApiController</typeparam>      
+            <typeparam name="TResult">Any result type</typeparam>    
+            <param name="helper">Provides the requested URI via helper.Request</param>
+            <param name="expression">Expression of T</param>
+            <param name="dispatcher">Custom route dispatcher to use in place of default dispatcher</param>
+            <returns>URI for the request and controller expression. </returns>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.UrlHelperExtensions.GetLink``1(System.Web.Http.Routing.UrlHelper,System.Linq.Expressions.Expression{System.Action{``0}},Ploeh.Hyprlinkr.IRouteDispatcher)">
+            <summary>
+            Returns URI matching helper's request and expression using provided route dispatcher.          
+            </summary>
+            <typeparam name="T">A class that derives from ApiController</typeparam>        
+            <param name="helper">Provides the requested URI via helper.Request</param>
+            <param name="expression">Expression of T</param>
+            <param name="dispatcher">Custom route dispatcher to use in place of default dispatcher</param>
+            <returns>URI for the request and controller expression. </returns>
+        </member>
+        <member name="M:Ploeh.Hyprlinkr.UrlHelperExtensions.GetLinkAsync``2(System.Web.Http.Routing.UrlHelper,System.Linq.Expressions.Expression{System.Func{``0,System.Threading.Tasks.Task{``1}}})">
+            <summary>
+            Returns URI matching helper's request and expression using RouteLinker's default route dispatcher
+            </summary>
+            <typeparam name="T">A class that derives from ApiController</typeparam>
+            <typeparam name="TResult">Any result type</typeparam>
+            <param name="helper">Provides the requested URI via helper.Request</param>
+            <param name="method">Method call expression of T</param>
+            <returns>
+            A <see cref="T:System.Threading.Tasks.Task`1"/> instance which represents the resource
+            identifed by <paramref name="method"/>.
+            </returns>
+        </member>
+    </members>
+</doc>

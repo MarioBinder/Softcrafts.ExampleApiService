@@ -1,0 +1,31 @@
+/* swagger ui customization */
+body.swagger-section #header {
+    background-color: #244E68;
+}
+
+body.swagger-section #header .swagger-ui-wrap #logo {
+    /*display: none;*/
+}
+
+    body.swagger-section #header #logo .logo__title {
+        display: none;
+        padding: 5px 0 0 10px;
+    }
+
+#logo a {
+    text-decoration: none;
+    color: white;
+
+}
+
+body.swagger-section .swagger-ui-wrap {
+    margin-top: 4px;
+}
+
+#input_apiKey {
+    display: none;
+}
+
+#validator {
+    display:none
+}

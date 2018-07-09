@@ -1,0 +1,12 @@
+F:\DEV\MBD\SEMAS\src v3\Softcrafts.ExampleApiService\Softcrafts.Jobs.Entities\bin\Debug\Softcrafts.Jobs.Entities.dll.config
+F:\DEV\MBD\SEMAS\src v3\Softcrafts.ExampleApiService\Softcrafts.Jobs.Entities\bin\Debug\Softcrafts.Jobs.Entities.dll
+F:\DEV\MBD\SEMAS\src v3\Softcrafts.ExampleApiService\Softcrafts.Jobs.Entities\bin\Debug\Softcrafts.Jobs.Entities.pdb
+F:\DEV\MBD\SEMAS\src v3\Softcrafts.ExampleApiService\Softcrafts.Jobs.Entities\bin\Debug\EntityFramework.dll
+F:\DEV\MBD\SEMAS\src v3\Softcrafts.ExampleApiService\Softcrafts.Jobs.Entities\bin\Debug\EntityFramework.SqlServer.dll
+F:\DEV\MBD\SEMAS\src v3\Softcrafts.ExampleApiService\Softcrafts.Jobs.Entities\bin\Debug\EntityFramework.xml
+F:\DEV\MBD\SEMAS\src v3\Softcrafts.ExampleApiService\Softcrafts.Jobs.Entities\bin\Debug\EntityFramework.SqlServer.xml
+F:\DEV\MBD\SEMAS\src v3\Softcrafts.ExampleApiService\Softcrafts.Jobs.Entities\obj\Debug\Softcrafts.Jobs.Entities.csprojResolveAssemblyReference.cache
+F:\DEV\MBD\SEMAS\src v3\Softcrafts.ExampleApiService\Softcrafts.Jobs.Entities\obj\Debug\Softcrafts.Jobs.Entities.csproj.CoreCompileInputs.cache
+F:\DEV\MBD\SEMAS\src v3\Softcrafts.ExampleApiService\Softcrafts.Jobs.Entities\obj\Debug\Softcrafts.Jobs.Entities.csproj.CopyComplete
+F:\DEV\MBD\SEMAS\src v3\Softcrafts.ExampleApiService\Softcrafts.Jobs.Entities\obj\Debug\Softcrafts.Jobs.Entities.dll
+F:\DEV\MBD\SEMAS\src v3\Softcrafts.ExampleApiService\Softcrafts.Jobs.Entities\obj\Debug\Softcrafts.Jobs.Entities.pdb

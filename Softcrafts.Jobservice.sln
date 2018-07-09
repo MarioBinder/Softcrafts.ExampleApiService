@@ -1,0 +1,62 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2037
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softcrafts.Jobs.Business", "Softcrafts.Jobs.Business\Softcrafts.Jobs.Business.csproj", "{A2CF7916-2699-4BC9-A358-44B632D5490F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softcrafts.Jobs.Entities", "Softcrafts.Jobs.Entities\Softcrafts.Jobs.Entities.csproj", "{2AA81C89-9629-457D-AC0A-2463673FDA0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softcrafts.Jobs.Tests", "Softcrafts.Jobs.Tests\Softcrafts.Jobs.Tests.csproj", "{9FC10EFD-1E5E-4DA2-8A98-B5D3F2E6E6B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softcrafts.JobService.API", "Softcrafts.JobService.API\Softcrafts.JobService.API.csproj", "{615C14E2-5BE5-42B3-B536-0153BFAA7B80}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A2CF7916-2699-4BC9-A358-44B632D5490F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2CF7916-2699-4BC9-A358-44B632D5490F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2CF7916-2699-4BC9-A358-44B632D5490F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2CF7916-2699-4BC9-A358-44B632D5490F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AA81C89-9629-457D-AC0A-2463673FDA0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AA81C89-9629-457D-AC0A-2463673FDA0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AA81C89-9629-457D-AC0A-2463673FDA0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AA81C89-9629-457D-AC0A-2463673FDA0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FC10EFD-1E5E-4DA2-8A98-B5D3F2E6E6B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FC10EFD-1E5E-4DA2-8A98-B5D3F2E6E6B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FC10EFD-1E5E-4DA2-8A98-B5D3F2E6E6B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FC10EFD-1E5E-4DA2-8A98-B5D3F2E6E6B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{615C14E2-5BE5-42B3-B536-0153BFAA7B80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{615C14E2-5BE5-42B3-B536-0153BFAA7B80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{615C14E2-5BE5-42B3-B536-0153BFAA7B80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{615C14E2-5BE5-42B3-B536-0153BFAA7B80}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {054D6255-439F-4046-9528-FF4B1FAF5442}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://xi-srv-tfs:8080/tfs/woco
+		SccProjectUniqueName0 = Softcrafts.Jobs.Business\\Softcrafts.Jobs.Business.csproj
+		SccProjectName0 = Softcrafts.Jobs.Business
+		SccLocalPath0 = Softcrafts.Jobs.Business
+		SccProjectUniqueName1 = Softcrafts.Jobs.Entities\\Softcrafts.Jobs.Entities.csproj
+		SccProjectName1 = Softcrafts.Jobs.Entities
+		SccLocalPath1 = Softcrafts.Jobs.Entities
+		SccProjectUniqueName2 = Softcrafts.Jobs.Tests\\Softcrafts.Jobs.Tests.csproj
+		SccProjectName2 = Softcrafts.Jobs.Tests
+		SccLocalPath2 = Softcrafts.Jobs.Tests
+		SccProjectUniqueName3 = Softcrafts.JobService.API\\Softcrafts.JobService.API.csproj
+		SccProjectName3 = Softcrafts.JobService.API
+		SccLocalPath3 = Softcrafts.JobService.API
+		SccLocalPath4 = Softcrafts.Jobservice
+		SccProjectFilePathRelativizedFromConnection4 = ..\\
+	EndGlobalSection
+EndGlobal
